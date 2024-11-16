@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fund_management/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fund_management/services/authService.dart';
 import 'package:fund_management/services/databaseService.dart';
@@ -7,10 +8,19 @@ import 'package:fund_management/services/databaseService.dart';
 class Signup extends StatelessWidget{
   final DatabaseService database= DatabaseService.databaseservice;
    Signup({super.key});
+  
   @override
   Widget build(context ){
    final emailController=TextEditingController();
    final passwordController=TextEditingController();
+   Future loading () async{
+    
+    showDialog(context: context, builder: (context){
+                    return const Center(child: CircularProgressIndicator(color: Colors.amber,));});
+    await Future.delayed(Duration(seconds: 2));
+    Navigator.of(context).pop();            
+
+   }
     return Scaffold(
     appBar: AppBar(
       backgroundColor: const Color.fromARGB(255, 83, 109, 227),
@@ -18,9 +28,9 @@ class Signup extends StatelessWidget{
     ),
     backgroundColor: const Color.fromARGB(255, 249, 249, 249),
     body:Container(
-      decoration: const BoxDecoration(gradient: LinearGradient(colors: [ Color.fromARGB(255, 231, 225, 173),Color.fromARGB(255, 244, 247, 155),],
-      begin:Alignment.bottomLeft,
-      end: Alignment.topRight),),
+      decoration: const BoxDecoration(gradient: LinearGradient(colors: [ Color.fromARGB(255, 181, 104, 59), Color.fromARGB(255, 230, 171, 126),],
+      begin:Alignment.topRight,
+      end: Alignment.bottomLeft),),
       child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -89,10 +99,13 @@ class Signup extends StatelessWidget{
                           ),
                         ),
                         const SizedBox(height: 20),  
-                  ElevatedButton(onPressed: (){
-                    database.insertBalance(emailController.text,0);
+                  ElevatedButton (onPressed: (){
+                   // database.insertBalance(emailController.text,0);
+                   loading();
+                   
                     try{
-                    Authservice().signup(email: emailController.text, password: passwordController.text);
+                    Authservice().signup(email: emailController.text, password: passwordController.text,context: context);
+                    
                     }
                     catch(e){
                       showDialog(context: context, builder: (context){
@@ -103,6 +116,7 @@ class Signup extends StatelessWidget{
           }
           );
                     }
+              
                   }, 
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
@@ -116,6 +130,7 @@ class Signup extends StatelessWidget{
          ),
     ),
    );
+
 
   }
 }

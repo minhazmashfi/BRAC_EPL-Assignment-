@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:fund_management/deposit.dart';
+import 'package:fund_management/models/withdrawdbModel.dart';
 import 'package:fund_management/services/databaseService.dart';
+import 'package:fund_management/summarytiles.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SummaryPage extends StatefulWidget{
 SummaryPage(this.email,{super.key});
 final String email;
-
+final database=DatabaseService.databaseservice.getDatabase();
 @override
 State<SummaryPage> createState() {
  return SummaryPageState();
@@ -16,18 +19,13 @@ State<SummaryPage> createState() {
 
 class SummaryPageState extends State<SummaryPage>{
 var balance=0;
-@override
-  void initState() {
-    
-    super.initState();
-    balancedetails();
-  }  
+
 @override
 
   Widget build(BuildContext context) {
   
   return  Scaffold(
-    backgroundColor: Color.fromARGB(255, 225, 218, 216),
+    backgroundColor: Color.fromARGB(255, 40, 39, 39),
     appBar:AppBar(
             elevation: 8,
             shadowColor: Colors.black,
@@ -44,54 +42,22 @@ var balance=0;
               end: Alignment.bottomRight)),
             ),
     ),
-  body: Card(
-              
-              margin: EdgeInsets.all(6),
-              color:Color.fromARGB(255, 253, 251, 250),
-              elevation: 12,
-              
-              child: Padding(
-                padding: EdgeInsets.all(4.0),
-                child: Column(
-                  crossAxisAlignment:CrossAxisAlignment.start,
-                  children: [
-                   Row(
-                      children: [const Text('Account Holder:',style: TextStyle(fontSize: 14,color: Colors.black,fontWeight: FontWeight.bold),),
-                      Spacer(),
-                      Text(widget.email,style:const  TextStyle(fontSize: 14,color: Colors.black),),
-                      const SizedBox(width: 3)
-                      ],
-                    
-                    ),
-                    const SizedBox(height: 25,),    
-                  Row(
-                      children: [Text('Available balance:',style: TextStyle(fontSize: 14,color: Colors.black,fontWeight: FontWeight.bold),),
-                      Spacer(),
-                      Text(balance.toString()+'BDT',style: TextStyle(fontSize: 14,color: Color.fromARGB(255, 247, 22, 22)),),
-                      SizedBox(width: 3)
-                      ],
-                    ),
-                  const SizedBox(height: 25,),
-                const   Row(
-                      children: [Text('Recent Transaction',style: TextStyle(fontSize: 14,color: Colors.black,fontWeight: FontWeight.bold),),
-                      Spacer(),
-                      Text('N/A',style: TextStyle(fontSize: 14,color: Color.fromARGB(255, 242, 12, 12)),),
-                      SizedBox(width: 3)
-                      ],
-                    ),  
-                  ],
-                ),
-              )
-          ),
+  body:Padding(
+    padding: const EdgeInsets.only(top: 4),
+    child: ListView(
+      children: [
+        
+        Summarytiles('Total Deposit', '100000'),
+        Summarytiles('Total Withdrawal', '30000'),
+        Summarytiles('Total Transfer', '40000'),
+        Summarytiles('Recent Deposit', '5000'),
+        Summarytiles('Recent Withdrawal', '18000'),
+        Summarytiles('Recent Transfer', '12000'),
+      ],
+    ),
+  )
 
   );
   }
-   balancedetails() async{
-  var prefs= await SharedPreferences.getInstance();
-  var balancepref=prefs.getInt("balance");
-  if (balancepref!=null){
-    balance=balancepref;
-  }
-} 
 
-}  
+}

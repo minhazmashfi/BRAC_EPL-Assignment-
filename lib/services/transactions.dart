@@ -79,7 +79,7 @@ class TransactionsState extends State<Transactions> {
                   child: Card(
                     elevation: 8,
                     margin: const EdgeInsets.all(5),
-                    color: const Color.fromARGB(255, 252, 224, 142),
+                    color: const Color.fromARGB(255, 249, 226, 157),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -106,6 +106,7 @@ class TransactionsState extends State<Transactions> {
         });
   }
 Widget withdrawList(useremail) {
+  
     return FutureBuilder(
         future: database.getWithdrawDetails(useremail),
         builder: (context, snapshot) {
@@ -119,7 +120,7 @@ Widget withdrawList(useremail) {
                   child: Card(
                     elevation: 8,
                     margin: const EdgeInsets.all(5),
-                    color: const Color.fromARGB(255, 252, 224, 142),
+                    color: const Color.fromARGB(255, 249, 226, 157),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -159,7 +160,7 @@ Widget transferList(useremail) {
                   child: Card(
                     elevation: 8,
                     margin: const EdgeInsets.all(5),
-                    color: const Color.fromARGB(255, 252, 224, 142),
+                    color: const Color.fromARGB(255, 249, 226, 157),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [

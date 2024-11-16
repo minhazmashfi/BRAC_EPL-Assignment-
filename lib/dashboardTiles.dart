@@ -20,41 +20,45 @@ class DashboardTiles extends StatelessWidget {
   @override
   Widget build(context) {
     return 
-    Card(
-        margin: const EdgeInsets.all(5),
-        color:const  Color.fromARGB(255, 243, 233, 97),
-        elevation: 10.0,
-        
-        shape:const RoundedRectangleBorder(borderRadius:BorderRadius.all(Radius.circular(20)) ),
-        shadowColor: Colors.black,
-        child:InkWell(
-          focusColor:const Color.fromARGB(255, 243, 201, 51) ,
-          
-          onTap: (){
-         if (operation=='deposit'){
-         Navigator.push(context, MaterialPageRoute(builder: (context)=>Deposit(email)));
-         }
-         else if (operation=='withdraw'){
-         Navigator.push(context, MaterialPageRoute(builder: (context)=>Withdraw(email)));
-         }
-         else if (operation=='transfer'){
-         Navigator.push(context, MaterialPageRoute(builder: (context)=>TransferPage(email)));
-         }
-         else if(operation=='summary'){
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> SummaryPage(email))); 
-         }
-      },
-          child:  Column(mainAxisAlignment:MainAxisAlignment.spaceEvenly,
-           crossAxisAlignment: CrossAxisAlignment.center,
-           children: [
-            Image.asset(iconString,height:70,width:70),
-            Text(labelText,style: const TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: Colors.black,),textAlign: TextAlign.center,)
-           
-           ]
-           ),
-        ),
-          
-      );
+   
+      
+        Card(
+            margin: const EdgeInsets.all(5),
+            color:const Color.fromARGB(255, 248, 240, 127),
+            elevation: 10.0,
+            
+            shape:const RoundedRectangleBorder(borderRadius:BorderRadius.all(Radius.circular(20)) ),
+            shadowColor: Colors.black,
+            child:InkWell(
+              focusColor:const Color.fromARGB(255, 243, 201, 51) ,
+              
+              onTap: (){
+             if (operation=='deposit'){
+             Navigator.push(context, MaterialPageRoute(builder: (context)=>Deposit(email)));
+             }
+             else if (operation=='withdraw'){
+             Navigator.push(context, MaterialPageRoute(builder: (context)=>Withdraw(email)));
+             }
+             else if (operation=='transfer'){
+             Navigator.push(context, MaterialPageRoute(builder: (context)=>TransferPage(email)));
+             }
+             else if(operation=='summary'){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> SummaryPage(email))); 
+             }
+          },
+              child:  Column(mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+               crossAxisAlignment: CrossAxisAlignment.center,
+               children: [
+                Image.asset(iconString,height:70,width:70),
+                Text(labelText,style: const TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: Colors.black,),textAlign: TextAlign.center,)
+               
+               ]
+               ),
+            ),
+              
+          );
+   
+   
       
       
   

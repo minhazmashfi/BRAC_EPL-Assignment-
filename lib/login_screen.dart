@@ -26,7 +26,7 @@ class Login_Screen_State extends State<LoginScreen>{
     ),
     backgroundColor: const Color.fromARGB(255, 249, 249, 249),
     body:Container(
-      decoration: const BoxDecoration(gradient: LinearGradient(colors: [ Color.fromARGB(255, 231, 225, 173),Color.fromARGB(255, 244, 247, 155),],
+      decoration: const BoxDecoration(gradient: LinearGradient(colors: [ Color.fromARGB(255, 180, 247, 239),Color.fromARGB(255, 34, 229, 206),],
       begin:Alignment.bottomLeft,
       end: Alignment.topRight)),
       child: Center(
@@ -95,7 +95,9 @@ class Login_Screen_State extends State<LoginScreen>{
                         ),
                         const SizedBox(height: 20),  
                   ElevatedButton(onPressed: (){
-                    Authservice().signin(email: emailController.text, password: passwordController.text, context: context);
+                   showDialog(context: context, builder: (context){
+                    return const Center(child: CircularProgressIndicator(color: Colors.amber,));});
+                   Authservice().signin(email: emailController.text, password: passwordController.text, context: context);
                   }, 
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,

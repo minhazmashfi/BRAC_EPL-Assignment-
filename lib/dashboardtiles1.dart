@@ -17,7 +17,7 @@ class DashboardTiles1 extends StatelessWidget {
     return 
     Card(
         margin: const EdgeInsets.all(5),
-        color:const  Color.fromARGB(255, 243, 233, 97),
+        color:const  Color.fromARGB(255, 248, 240, 127),
         elevation: 10.0,
         
         shape:const RoundedRectangleBorder(borderRadius:BorderRadius.all(Radius.circular(20)) ),

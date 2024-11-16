@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fund_management/accountInfo.dart';
 import 'package:fund_management/login_screen.dart';
 
 
@@ -28,7 +29,9 @@ class Sidebar extends StatelessWidget{
         ListTile(
             title: const Text('Account Information'),
             leading: const Icon(Icons.account_box_rounded),
-            onTap: (){},
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>Accountinfo(email)));
+            },
             
           ),
           ListTile(

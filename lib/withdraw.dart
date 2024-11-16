@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fund_management/services/databaseService.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fund_management/visa_card.dart';
 
 class Withdraw extends StatefulWidget{
 const Withdraw(this.email,{super.key});
@@ -21,8 +22,16 @@ class DepositState extends State<Withdraw>{
   Widget build(BuildContext context) {
   
   final amountController=TextEditingController();
+   Future loading () async{
+    
+    showDialog(context: context, builder: (context){
+                    return const Center(child: CircularProgressIndicator(color: Color.fromARGB(255, 189, 28, 217),backgroundColor: Colors.amber,));});
+    await Future.delayed( const Duration(seconds: 1));
+    Navigator.of(context).pop();            
+
+   }
   return  Scaffold(
-    backgroundColor:  Color.fromARGB(255, 251, 221, 210),
+    backgroundColor:  Color.fromARGB(255, 246, 223, 223),
     appBar:AppBar(
             elevation: 8,
             shadowColor: Colors.black,
@@ -41,49 +50,60 @@ class DepositState extends State<Withdraw>{
     ),
   body: Column(
     children: [
-     Container(
-      height: 180,
-      width: double.infinity,
-       child:   Card(
+    SizedBox(
+            height: 200,
+            child: ListView(
+              scrollDirection:Axis.horizontal,
+              children: [
+             SizedBox(
+                height: 200,
+                width: 380,
+                child:Card(
+                margin:  EdgeInsets.all(8),
+                color: Color.fromARGB(255, 189, 138, 76),
+                elevation: 5.0,
               
-              margin: EdgeInsets.all(6),
-              color: Color.fromARGB(255, 252, 203, 181),
-              elevation: 8,
-              
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 8,horizontal: 4),
+                shape: RoundedRectangleBorder(borderRadius:BorderRadius.all(Radius.circular(20)) ),
+                child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 16,horizontal: 4),
                 child: Column(
                   crossAxisAlignment:CrossAxisAlignment.start,
                   children: [
                    Row(
-                      children: [const Text('Account Holder:',style: TextStyle(fontSize: 14,color: Colors.black,fontWeight: FontWeight.bold),),
-                      const Spacer(),
-                      Text(widget.email,style: const TextStyle(fontSize: 14,color: Colors.black),),
+                      children: [const Text('Account Holder:',style: TextStyle(fontSize: 15,color: Color.fromARGB(255, 246, 243, 243),fontWeight: FontWeight.bold),),
+                       Spacer(),
+                      Text(widget.email,style: const TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.bold),),
                       const SizedBox(width: 3)
                       ],
                     
                     ),
                     const SizedBox(height: 25,),    
                 const    Row(
-                      children: [Text('Available balance: ',style: TextStyle(fontSize: 14,color: Colors.black,fontWeight: FontWeight.bold),),
+                      children: [Text('Available balance: ',style: TextStyle(fontSize: 15,color: Color.fromARGB(255, 237, 230, 230),fontWeight: FontWeight.bold),),
                       Spacer(),
-                      Text('N/A' ,style: TextStyle(fontSize: 14,color: Color.fromARGB(255, 247, 30, 30)),),
+                      Text('50000 /-' ,style: TextStyle(fontSize: 15,color: Color.fromARGB(255, 214, 237, 67),fontWeight: FontWeight.bold),),
                       SizedBox(width: 3)
                       ],
                     ),
                   const SizedBox(height: 25,),
                const    Row(
-                      children: [Text('Recent Transaction',style: TextStyle(fontSize: 14,color: Colors.black,fontWeight: FontWeight.bold),),
+                      children: [Text('Recent Withdrawal',style: TextStyle(fontSize: 15,color: Color.fromARGB(255, 238, 234, 234),fontWeight: FontWeight.bold),),
                       Spacer(),
-                      Text('N/A',style: TextStyle(fontSize: 14,color: Color.fromARGB(255, 239, 4, 4)),),
+                      Text('10000 /-',style: TextStyle(fontSize: 15,color:Color.fromARGB(255, 214, 237, 67),fontWeight: FontWeight.bold),),
                       SizedBox(width: 3)
                       ],
                     ),  
                   ],
                 ),
               )
-          ),
-     ),  
+                )
+              ),
+                
+              
+              VisaCard(),
+             ],
+             ),
+          ), 
       Padding(
         padding: const EdgeInsets.all(6.0),
         child: Container(
@@ -105,22 +125,39 @@ class DepositState extends State<Withdraw>{
     const SizedBox(height: 2,),
     SizedBox(
       height: 60,
-      width: 250,
+      width: 200,
       
       child: ElevatedButton(onPressed: ()async{
       
-          var prefs=await SharedPreferences.getInstance();
-          var balance =(prefs.getInt('balance'));
-          if (balance!=null){
-            balance=balance - int.parse(amountController.text);
-            prefs.setInt('balance', balance);
-          }
-         
-        database.insertWithdrawal(widget.email, int.parse(amountController.text));
+        showDialog(context: context, builder:(context)=>  AlertDialog(title:Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Do you want to proceed with the transaction?',style: TextStyle(fontSize: 14),),
+            const SizedBox(height: 2,),
+             Text('Amount: '+amountController.text+'/-',style: const TextStyle(fontSize: 14,))
+          ],
+        ),
+          
+          content: Row(children: [
+            Spacer(),
+            TextButton(onPressed: (){
+               database.insertWithdrawal(widget.email, int.parse(amountController.text));
+               Navigator.of(context).pop();
+               loading();
+            }, child: const Text('Confirm')),
+            TextButton(onPressed: (){
+           
+            Navigator.of(context).pop();
+            }, child: const Text('Cancel'))
+          ],)
+          ,alignment: Alignment.center));
+          
+          
+          
        
       
       },
-      style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 238, 17, 17),shape:const  RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.zero))),
+      style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 181, 10, 10),shape:const  RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.zero))),
        child:const Text ('Withdraw',style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.bold),)),
     )  
     ],
