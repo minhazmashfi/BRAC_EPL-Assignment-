@@ -4,21 +4,51 @@ import 'package:flutter/rendering.dart';
 import 'package:fund_management/dashboardtiles1.dart';
 import 'package:fund_management/deposit.dart';
 import 'package:fund_management/login_screen.dart';
+import 'package:fund_management/models/balanceModel.dart';
 import 'package:fund_management/services/transactions.dart';
 import 'package:fund_management/sideBar.dart';
 import 'package:fund_management/visa_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fund_management/dashboardTiles.dart';
 import 'package:back_pressed/back_pressed.dart';
+import 'package:fund_management/services/databaseService.dart';
 
-class Dashboard extends StatelessWidget{
-const Dashboard( this.email,{super.key});
+class Dashboard extends StatefulWidget{
+Dashboard( this.email,{super.key});
 final String email;  
+
+
+@override
+State<Dashboard> createState(){
+return DepositState();
+}
+
+
+}
+final DatabaseService database= DatabaseService.databaseservice;
+
+class DepositState extends State<Dashboard>{
+changeState(){
+setState(() {
+  print('state changed');
+});
+}
+Future<int> getbalance()async{
+List<Balancemodel> balance= await database.getBalanceDetails(widget.email);
+for (Balancemodel index in balance){
+  final int balance= index.balanceAmount;
+  return balance;
+  
+}
+return 5;
+  }
+
 @override
 Widget build(context){
+
   return Scaffold(
     backgroundColor: const Color.fromARGB(255, 248, 250, 213),
-    drawer: Sidebar(email),
+    drawer: Sidebar(widget.email),
     appBar:AppBar(
             elevation: 8,
             shadowColor: Colors.black,
@@ -44,7 +74,7 @@ Widget build(context){
               Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
             }, child: const Text('Yes')),
             TextButton(onPressed: (){
-             Navigator.push(context, MaterialPageRoute(builder: (context)=>Dashboard(email)));
+             Navigator.push(context, MaterialPageRoute(builder: (context)=>Dashboard(widget.email)));
             }, child: const Text('No'))
           ],)
           ,alignment: Alignment.center));
@@ -59,7 +89,7 @@ Widget build(context){
             child: ListView(
               scrollDirection:Axis.horizontal,
               children: [
-            const  SizedBox(
+           SizedBox(
                 height: 200,
                 width: 380,
                 child:Card(
@@ -67,18 +97,18 @@ Widget build(context){
                 color: Color.fromARGB(255, 80, 34, 206),
                 elevation: 5.0,
               
-                shape: RoundedRectangleBorder(borderRadius:BorderRadius.all(Radius.circular(20)) ),
+                shape: const RoundedRectangleBorder(borderRadius:BorderRadius.all(Radius.circular(20)) ),
                 child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    
-                   children: [
-                    Text('Current Balance:',style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),),
-                    const SizedBox(height: 5,),
-                    Text('50000 BDT',style: TextStyle(color: Color.fromARGB(255, 228, 244, 14), fontSize: 28, fontWeight: FontWeight.bold),)
-                   ],
-                  
-                  ),
+                  child:FutureBuilder(future: getbalance(), builder: (context,snapshot){
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Current Balance',style: TextStyle(fontSize: 30,color: Colors.white,fontWeight: FontWeight.bold),),
+                        Text(snapshot.data.toString()+" BDT",style: const TextStyle(fontSize: 30,color: Color.fromARGB(255, 240, 2, 2),fontWeight: FontWeight.bold),),
+                       
+                      ],
+                    );
+                  })
                 ),
                 )
               ),
@@ -96,11 +126,11 @@ Widget build(context){
                    physics: const NeverScrollableScrollPhysics(),   
                       children: [
                       
-                        DashboardTiles('Deposit','assets/icons/deposit.png',email,'deposit'),
-                        DashboardTiles('Summary','assets/icons/summary.png',email,'summary'),
-                        DashboardTiles1('Transactions','assets/icons/transactions.png',email,),
-                        DashboardTiles('Transfer','assets/icons/transfer.png',email,'transfer'),
-                        DashboardTiles('Withdraw','assets/icons/withdraw.png',email,'withdraw')
+                        DashboardTiles('Deposit','assets/icons/deposit.png',widget.email,'deposit',changeState),
+                        DashboardTiles('Summary','assets/icons/summary.png',widget.email,'summary',changeState),
+                        DashboardTiles1('Transactions','assets/icons/transactions.png',widget.email,),
+                        DashboardTiles('Transfer','assets/icons/transfer.png',widget.email,'transfer',changeState),
+                        DashboardTiles('Withdraw','assets/icons/withdraw.png',widget.email,'withdraw',changeState)
                       
                       ],
                       
@@ -111,5 +141,9 @@ Widget build(context){
      
   ),  
   );
+
+
 }  
+
 }
+

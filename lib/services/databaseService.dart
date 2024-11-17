@@ -190,7 +190,35 @@ Future<void> _dbUpdatesVersion_6(Database db) async {
     nameColumn:email,
     balanceColumn:balance
   });
-  }    
+  
+  }
+void updateBalance(String email,int amount,String operation,Function changeState) async {
+  int prevbalance=0;
+  int finalbalance=0;
+  List<Balancemodel> balance=await getBalanceDetails(email);
+  for (Balancemodel index in balance){
+   prevbalance=index.balanceAmount;
+  }
+  if (operation=="deposit"){
+   finalbalance=prevbalance+amount;
+  }
+  if (operation=="withdraw"){
+   finalbalance=prevbalance-amount;
+  }
+  if (operation=="transfer"){
+   finalbalance=prevbalance-amount;
+  }
+  final db=await database;
+  await db.update(balanceTable,{
+    nameColumn:email,
+    balanceColumn:finalbalance
+  },
+  where: "accName= ?",
+  whereArgs:[email]
+ 
+  );
+changeState();  
+}      
 
 Future<List<Depositdbmodel>> getDepDetails(String email)async{
    final db=await database;
@@ -231,6 +259,9 @@ Future<List<Balancemodel>> getBalanceDetails(String email)async{
    
    
    List<Balancemodel> transfers= data.map((e) =>Balancemodel(accName: e["accName"] as String, balanceAmount:e['balanceAmount'] as int,) ).toList();
+   for (Balancemodel index in transfers){
+     print(index.balanceAmount);
+   }
    return transfers;
 } 
 

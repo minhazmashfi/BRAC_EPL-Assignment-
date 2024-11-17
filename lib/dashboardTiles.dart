@@ -11,10 +11,11 @@ import 'package:fund_management/trnansfer.dart';
 
 
 class DashboardTiles extends StatelessWidget {
-  DashboardTiles(this.labelText, this.iconString,this.email,this.operation,{super.key});
+  DashboardTiles(this.labelText, this.iconString,this.email,this.operation,this.changeState,{super.key});
   final String labelText;
   final String iconString;
   final String email;
+  final Function changeState;
   String operation;
  
   @override
@@ -34,13 +35,13 @@ class DashboardTiles extends StatelessWidget {
               
               onTap: (){
              if (operation=='deposit'){
-             Navigator.push(context, MaterialPageRoute(builder: (context)=>Deposit(email)));
+             Navigator.push(context, MaterialPageRoute(builder: (context)=>Deposit(email,changeState)));
              }
              else if (operation=='withdraw'){
-             Navigator.push(context, MaterialPageRoute(builder: (context)=>Withdraw(email)));
+             Navigator.push(context, MaterialPageRoute(builder: (context)=>Withdraw(email,changeState)));
              }
              else if (operation=='transfer'){
-             Navigator.push(context, MaterialPageRoute(builder: (context)=>TransferPage(email)));
+             Navigator.push(context, MaterialPageRoute(builder: (context)=>TransferPage(email,changeState)));
              }
              else if(operation=='summary'){
               Navigator.push(context, MaterialPageRoute(builder: (context)=> SummaryPage(email))); 

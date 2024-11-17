@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fund_management/deposit.dart';
+import 'package:fund_management/models/depositdbModel.dart';
+import 'package:fund_management/models/transferdbModel.dart';
 import 'package:fund_management/models/withdrawdbModel.dart';
 import 'package:fund_management/services/databaseService.dart';
 import 'package:fund_management/summarytiles.dart';
@@ -18,7 +20,61 @@ State<SummaryPage> createState() {
 } 
 
 class SummaryPageState extends State<SummaryPage>{
-var balance=0;
+  Future<int> getrecenttran() async {
+    List<Transferdbmodel> transfers =
+        await database.getTransferDetails(widget.email);
+    int transfer = 0;
+    for (Transferdbmodel index in transfers) {
+      transfer = index.tranAmount;
+    }
+    return transfer;
+  }
+ Future<int> getrecentdep() async {
+    List<Depositdbmodel> deposits = await database.getDepDetails(widget.email);
+    int deposit = 0;
+    for (Depositdbmodel index in deposits) {
+      deposit = index.depAmount;
+    }
+    return deposit;
+  } 
+
+ Future<int> getAlltran() async {
+    List<Transferdbmodel> transfers =
+        await database.getTransferDetails(widget.email);
+    int transfer = 0;
+    for (Transferdbmodel index in transfers) {
+      transfer = transfer+index.tranAmount;
+    }
+    return transfer;
+  }
+
+ Future<int> getAlldep() async {
+    List<Depositdbmodel> deposits = await database.getDepDetails(widget.email);
+    int deposit = 0;
+    for (Depositdbmodel index in deposits) {
+      deposit = deposit+index.depAmount;
+    }
+    return deposit;
+  }
+ Future<int> getrecentWith() async {
+    List<Withdrawdbmodel> withdrawals =
+        await database.getWithdrawDetails(widget.email);
+    int withdrawal = 0;
+    for (Withdrawdbmodel index in withdrawals) {
+      withdrawal = index.withdrawAmount;
+    }
+    return withdrawal;
+  }  
+ Future<int> getAllWith() async {
+    List<Withdrawdbmodel> withdrawals =
+        await database.getWithdrawDetails(widget.email);
+    int withdrawal = 0;
+    for (Withdrawdbmodel index in withdrawals) {
+      withdrawal = withdrawal+ index.withdrawAmount;
+    }
+    return withdrawal;
+  }  
+
 
 @override
 
@@ -47,12 +103,30 @@ var balance=0;
     child: ListView(
       children: [
         
-        Summarytiles('Total Deposit', '100000'),
-        Summarytiles('Total Withdrawal', '30000'),
-        Summarytiles('Total Transfer', '40000'),
-        Summarytiles('Recent Deposit', '5000'),
-        Summarytiles('Recent Withdrawal', '18000'),
-        Summarytiles('Recent Transfer', '12000'),
+     FutureBuilder(
+                                      future: getAlldep(),
+                                      builder: (context, snapshot) {
+                                        return    Summarytiles('Total Deposit', snapshot.data.toString());}),
+        FutureBuilder(
+                                      future: getAllWith(),
+                                      builder: (context, snapshot) {
+                                        return     Summarytiles('Total Withdrawal', snapshot.data.toString());}),
+        FutureBuilder(
+                                      future: getAlltran(),
+                                      builder: (context, snapshot) {
+                                        return Summarytiles('Total Transfer',snapshot.data.toString());}),
+      FutureBuilder(
+                                      future: getrecentdep(),
+                                      builder: (context, snapshot) {
+                                        return   Summarytiles('Recent Deposit', snapshot.data.toString());}),
+      FutureBuilder(
+                                      future: getrecentWith(),
+                                      builder: (context, snapshot) {
+                                        return   Summarytiles('Recent Withdrawal',snapshot.data.toString());}),
+       FutureBuilder(
+                                      future: getrecenttran(),
+                                      builder: (context, snapshot) {
+                                        return  Summarytiles('Recent Transfer', snapshot.data.toString());})
       ],
     ),
   )
